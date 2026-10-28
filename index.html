@@ -1,0 +1,1118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Todo List</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body
+  id="body"
+  class="bg-[#F7F7F7] min-h-screen transition-colors duration-300"
+>
+
+  <!-- ================= MAIN ================= -->
+
+  <div class="max-w-[900px] mx-auto pt-[30px] px-5">
+
+    <!-- TITLE -->
+    <h1
+      id="title"
+      class="text-[28px] font-bold text-[#252525] text-center mb-[25px]"
+    >
+      TODO LIST
+    </h1>
+
+
+    
+
+    <div class="flex items-center gap-[18px] max-w-[750px] mx-auto">
+
+      <!-- SEARCH -->
+      <div
+        id="searchBox"
+        class="
+          flex items-center justify-between
+          border border-[#6C63FF]
+          h-[45px]
+          rounded-[5px]
+          px-4
+          flex-1
+          bg-white
+          transition-colors duration-300
+        "
+      >
+
+        <input
+          id="searchInput"
+          type="text"
+          placeholder="Search note..."
+          class="
+            w-full h-full
+            outline-none
+            bg-transparent
+            text-[16px]
+            text-[#252525]
+            placeholder:text-[#C3C1E5]
+          "
+        />
+
+        <!-- SEARCH ICON -->
+        <svg
+          width="25"
+          height="25"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#6C63FF"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.3-4.3"></path>
+        </svg>
+
+      </div>
+
+
+      <!-- FILTER -->
+      <select
+        id="filterSelect"
+        class="
+          h-[45px]
+          bg-[#6C63FF]
+          text-white
+          font-semibold
+          text-[16px]
+          px-3
+          rounded-[5px]
+          outline-none
+          cursor-pointer
+        "
+      >
+        <option value="all">ALL</option>
+        <option value="complete">COMPLETE</option>
+        <option value="incomplete">INCOMPLETE</option>
+      </select>
+
+
+      <!-- DARK MODE -->
+      <button
+        id="darkBtn"
+        class="
+          w-[45px] h-[45px]
+          bg-[#6C63FF]
+          rounded-[5px]
+          flex items-center justify-center
+          hover:bg-[#574fe0]
+          active:scale-95
+          transition
+        "
+      >
+
+        <!-- MOON -->
+        <svg
+          id="moonIcon"
+          width="27"
+          height="27"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="white"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path
+            d="M21 12.79A9 9 0 1 1 11.21 3
+            7 7 0 0 0 21 12.79z"
+          ></path>
+        </svg>
+
+
+        <!-- SUN -->
+        <svg
+          id="sunIcon"
+          class="hidden"
+          width="27"
+          height="27"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="white"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="12" cy="12" r="4"></circle>
+
+          <path d="M12 2v2"></path>
+          <path d="M12 20v2"></path>
+
+          <path d="m4.93 4.93 1.41 1.41"></path>
+          <path d="m17.66 17.66 1.41 1.41"></path>
+
+          <path d="M2 12h2"></path>
+          <path d="M20 12h2"></path>
+
+          <path d="m6.34 17.66-1.41 1.41"></path>
+          <path d="m19.07 4.93-1.41 1.41"></path>
+        </svg>
+
+      </button>
+
+    </div>
+
+
+
+    <!-- ================= TASK LIST ================= -->
+
+    <div
+      id="taskList"
+      class="max-w-[600px] mx-auto mt-[28px]"
+    ></div>
+
+  </div>
+
+
+
+  <!-- ================= PLUS BUTTON ================= -->
+
+  <button
+    id="addBtn"
+    class="
+      fixed
+      bottom-[30px]
+      right-[10%]
+      w-[60px]
+      h-[60px]
+      rounded-full
+      bg-[#6C63FF]
+      text-white
+      text-[40px]
+      font-light
+      flex items-center
+      justify-center
+      shadow-lg
+      hover:scale-110
+      hover:bg-[#574fe0]
+      active:scale-95
+      transition
+    "
+  >
+    +
+  </button>
+
+
+
+  <!-- ================= NEW NOTE MODAL ================= -->
+
+  <div
+    id="noteModal"
+    class="
+      hidden
+      fixed inset-0
+      z-50
+      bg-black/55
+      items-center
+      justify-center
+    "
+  >
+
+    <!-- MODAL BOX -->
+    <div
+      id="modalBox"
+      class="
+        w-[580px]
+        h-[335px]
+        max-w-[90%]
+        bg-white
+        rounded-[20px]
+        px-[35px]
+        py-[20px]
+        flex
+        flex-col
+        transition-colors
+        duration-300
+      "
+    >
+
+      <!-- TITLE -->
+      <h2
+        id="modalTitle"
+        class="
+          text-center
+          text-[26px]
+          font-bold
+          text-[#252525]
+        "
+      >
+        NEW NOTE
+      </h2>
+
+
+      <!-- INPUT -->
+      <input
+        id="taskInput"
+        type="text"
+        placeholder="Input your note..."
+        class="
+          mt-[25px]
+          w-full
+          h-[44px]
+          border
+          border-[#6C63FF]
+          rounded-[5px]
+          px-[18px]
+          text-[18px]
+          text-[#252525]
+          placeholder:text-[#C3C1E5]
+          outline-none
+          bg-transparent
+        "
+      />
+
+
+      <!-- BUTTONS -->
+      <div class="flex justify-between mt-auto">
+
+        <!-- CANCEL -->
+        <button
+          id="cancelBtn"
+          class="
+            h-[44px]
+            px-[25px]
+            border
+            border-[#6C63FF]
+            text-[#6C63FF]
+            font-semibold
+            text-[18px]
+            rounded-[5px]
+            hover:bg-[#6C63FF]
+            hover:text-white
+            transition
+          "
+        >
+          CANCEL
+        </button>
+
+
+        <!-- APPLY -->
+        <button
+          id="applyBtn"
+          class="
+            h-[44px]
+            px-[25px]
+            bg-[#6C63FF]
+            text-white
+            font-semibold
+            text-[18px]
+            rounded-[5px]
+            hover:bg-[#574fe0]
+            active:scale-95
+            transition
+          "
+        >
+          APPLY
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- ================= JAVASCRIPT ================= -->
+
+  <script>
+
+    // ==========================================
+    // TASK DATA
+    // ==========================================
+
+    let tasks = [
+      {
+        id: 1,
+        text: "NOTE #1",
+        completed: false,
+      },
+
+      {
+        id: 2,
+        text: "NOTE #2",
+        completed: true,
+      },
+
+      {
+        id: 3,
+        text: "NOTE #3",
+        completed: false,
+      },
+    ];
+
+
+
+    // ==========================================
+    // ELEMENTS
+    // ==========================================
+
+    const body =
+      document.getElementById("body");
+
+    const title =
+      document.getElementById("title");
+
+    const searchBox =
+      document.getElementById("searchBox");
+
+    const searchInput =
+      document.getElementById("searchInput");
+
+    const filterSelect =
+      document.getElementById("filterSelect");
+
+    const darkBtn =
+      document.getElementById("darkBtn");
+
+    const moonIcon =
+      document.getElementById("moonIcon");
+
+    const sunIcon =
+      document.getElementById("sunIcon");
+
+    const taskList =
+      document.getElementById("taskList");
+
+    const addBtn =
+      document.getElementById("addBtn");
+
+    const noteModal =
+      document.getElementById("noteModal");
+
+    const modalBox =
+      document.getElementById("modalBox");
+
+    const modalTitle =
+      document.getElementById("modalTitle");
+
+    const taskInput =
+      document.getElementById("taskInput");
+
+    const cancelBtn =
+      document.getElementById("cancelBtn");
+
+    const applyBtn =
+      document.getElementById("applyBtn");
+
+
+    let darkMode = false;
+
+
+
+    // ==========================================
+    // RENDER TASKS
+    // ==========================================
+
+    function renderTasks() {
+
+      taskList.innerHTML = "";
+
+
+      // SEARCH VALUE
+      const searchText =
+        searchInput.value
+          .toLowerCase()
+          .trim();
+
+
+      // FILTER VALUE
+      const filterValue =
+        filterSelect.value;
+
+
+
+      // ========================================
+      // SEARCH + FILTER
+      // ========================================
+
+      const filteredTasks = tasks.filter((task) => {
+
+        const matchesSearch =
+          task.text
+            .toLowerCase()
+            .includes(searchText);
+
+
+        let matchesFilter = true;
+
+
+        if (filterValue === "complete") {
+
+          matchesFilter =
+            task.completed === true;
+
+        }
+
+
+        if (filterValue === "incomplete") {
+
+          matchesFilter =
+            task.completed === false;
+
+        }
+
+
+        return matchesSearch && matchesFilter;
+
+      });
+
+
+
+      // ========================================
+      // CREATE EACH TASK
+      // ========================================
+
+      filteredTasks.forEach((task) => {
+
+        const taskItem =
+          document.createElement("div");
+
+
+        taskItem.className = `
+          flex
+          items-center
+          justify-between
+          min-h-[70px]
+          border-b
+          border-[#6C63FF]/50
+        `;
+
+
+
+        taskItem.innerHTML = `
+
+          <!-- LEFT SIDE -->
+
+          <div class="flex items-center gap-5">
+
+            <!-- CHECKBOX -->
+
+            <input
+              type="checkbox"
+
+              ${task.completed ? "checked" : ""}
+
+              onchange="toggleTask(${task.id})"
+
+              class="
+                w-[30px]
+                h-[30px]
+                accent-[#6C63FF]
+                cursor-pointer
+              "
+            />
+
+
+            <!-- TASK TEXT -->
+
+            <span
+              class="
+                font-bold
+                text-[20px]
+
+                ${
+                  task.completed
+                    ? "line-through text-gray-400"
+                    : darkMode
+                      ? "text-white"
+                      : "text-[#252525]"
+                }
+              "
+            >
+              ${task.text}
+            </span>
+
+          </div>
+
+
+
+          <!-- RIGHT SIDE -->
+
+          <div class="flex items-center gap-4">
+
+
+            <!-- EDIT BUTTON -->
+
+            <button
+              onclick="editTask(${task.id})"
+              class="
+                text-gray-300
+                hover:text-[#6C63FF]
+                transition
+              "
+              title="Edit"
+            >
+
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+
+                <path
+                  d="M12 20h9"
+                ></path>
+
+                <path
+                  d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"
+                ></path>
+
+              </svg>
+
+            </button>
+
+
+
+            <!-- DELETE BUTTON -->
+
+            <button
+              onclick="deleteTask(${task.id})"
+              class="
+                text-gray-300
+                hover:text-red-500
+                transition
+              "
+              title="Delete"
+            >
+
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+
+                <path d="M3 6h18"></path>
+
+                <path
+                  d="M8 6V4h8v2"
+                ></path>
+
+                <path
+                  d="M19 6l-1 14H6L5 6"
+                ></path>
+
+                <path d="M10 11v5"></path>
+
+                <path d="M14 11v5"></path>
+
+              </svg>
+
+            </button>
+
+          </div>
+
+        `;
+
+
+        taskList.appendChild(taskItem);
+
+      });
+
+    }
+
+
+
+    // ==========================================
+    // OPEN MODAL
+    // ==========================================
+
+    addBtn.addEventListener("click", function () {
+
+      noteModal.classList.remove("hidden");
+
+      noteModal.classList.add("flex");
+
+      taskInput.value = "";
+
+
+      setTimeout(function () {
+
+        taskInput.focus();
+
+      }, 100);
+
+    });
+
+
+
+    // ==========================================
+    // CLOSE MODAL
+    // ==========================================
+
+    function closeModal() {
+
+      noteModal.classList.add("hidden");
+
+      noteModal.classList.remove("flex");
+
+      taskInput.value = "";
+
+    }
+
+
+
+    // ==========================================
+    // CANCEL
+    // ==========================================
+
+    cancelBtn.addEventListener("click", function () {
+
+      closeModal();
+
+    });
+
+
+
+    // ==========================================
+    // ADD TASK
+    // ==========================================
+
+    function addTask() {
+
+      const taskText =
+        taskInput.value.trim();
+
+
+      // EMPTY INPUT
+      if (taskText === "") {
+
+        return false;
+
+      }
+
+
+      // NEW TASK
+      const newTask = {
+
+        id: Date.now(),
+
+        text: taskText,
+
+        completed: false,
+
+      };
+
+
+      // PUSH TASK
+      tasks.push(newTask);
+
+
+      // CLEAR INPUT
+      taskInput.value = "";
+
+
+      // SHOW TASKS
+      renderTasks();
+
+
+      return true;
+
+    }
+
+
+
+    // ==========================================
+    // APPLY BUTTON
+    // ==========================================
+
+    applyBtn.addEventListener("click", function () {
+
+      const added = addTask();
+
+
+      if (added) {
+
+        closeModal();
+
+      }
+
+    });
+
+
+
+    // ==========================================
+    // ENTER = APPLY
+    // ==========================================
+
+    taskInput.addEventListener(
+      "keydown",
+      function (event) {
+
+        if (event.key === "Enter") {
+
+          const added = addTask();
+
+
+          if (added) {
+
+            closeModal();
+
+          }
+
+        }
+
+      }
+    );
+
+
+
+    // ==========================================
+    // CLICK OUTSIDE MODAL
+    // ==========================================
+
+    noteModal.addEventListener("click", function (event) {
+
+      if (event.target === noteModal) {
+
+        closeModal();
+
+      }
+
+    });
+
+
+
+    // ==========================================
+    // ESC = CLOSE
+    // ==========================================
+
+    document.addEventListener("keydown", function (event) {
+
+      if (event.key === "Escape") {
+
+        closeModal();
+
+      }
+
+    });
+
+
+
+    // ==========================================
+    // COMPLETE / INCOMPLETE
+    // ==========================================
+
+    function toggleTask(id) {
+
+      const task =
+        tasks.find((task) => task.id === id);
+
+
+      if (task) {
+
+        task.completed =
+          !task.completed;
+
+      }
+
+
+      renderTasks();
+
+    }
+
+
+
+    // ==========================================
+    // DELETE TASK
+    // ==========================================
+
+    function deleteTask(id) {
+
+      tasks =
+        tasks.filter(
+          (task) => task.id !== id
+        );
+
+
+      renderTasks();
+
+    }
+
+
+
+    // ==========================================
+    // EDIT TASK
+    // ==========================================
+
+    function editTask(id) {
+
+      const task =
+        tasks.find((task) => task.id === id);
+
+
+      if (!task) {
+
+        return;
+
+      }
+
+
+      const newText =
+        prompt("Edit note:", task.text);
+
+
+      if (
+        newText !== null &&
+        newText.trim() !== ""
+      ) {
+
+        task.text =
+          newText.trim();
+
+
+        renderTasks();
+
+      }
+
+    }
+
+
+
+    // ==========================================
+    // SEARCH
+    // ==========================================
+
+    searchInput.addEventListener(
+      "input",
+      function () {
+
+        renderTasks();
+
+      }
+    );
+
+
+
+    // ==========================================
+    // FILTER
+    // ==========================================
+
+    filterSelect.addEventListener(
+      "change",
+      function () {
+
+        renderTasks();
+
+      }
+    );
+
+
+
+    // ==========================================
+    // DARK MODE
+    // ==========================================
+
+    darkBtn.addEventListener("click", function () {
+
+      darkMode = !darkMode;
+
+
+
+      // ================= DARK =================
+
+      if (darkMode) {
+
+        // BODY
+        body.classList.remove(
+          "bg-[#F7F7F7]"
+        );
+
+        body.classList.add(
+          "bg-[#252525]"
+        );
+
+
+        // TITLE
+        title.classList.remove(
+          "text-[#252525]"
+        );
+
+        title.classList.add(
+          "text-white"
+        );
+
+
+        // SEARCH BOX
+        searchBox.classList.remove(
+          "bg-white"
+        );
+
+        searchBox.classList.add(
+          "bg-[#252525]"
+        );
+
+
+        // SEARCH TEXT
+        searchInput.classList.remove(
+          "text-[#252525]"
+        );
+
+        searchInput.classList.add(
+          "text-white"
+        );
+
+
+        // MOON -> SUN
+        moonIcon.classList.add(
+          "hidden"
+        );
+
+        sunIcon.classList.remove(
+          "hidden"
+        );
+
+
+        // MODAL
+        modalBox.classList.remove(
+          "bg-white"
+        );
+
+        modalBox.classList.add(
+          "bg-[#333333]"
+        );
+
+
+        modalTitle.classList.remove(
+          "text-[#252525]"
+        );
+
+        modalTitle.classList.add(
+          "text-white"
+        );
+
+
+        taskInput.classList.remove(
+          "text-[#252525]"
+        );
+
+        taskInput.classList.add(
+          "text-white"
+        );
+
+      }
+
+
+
+      // ================= LIGHT =================
+
+      else {
+
+        // BODY
+        body.classList.remove(
+          "bg-[#252525]"
+        );
+
+        body.classList.add(
+          "bg-[#F7F7F7]"
+        );
+
+
+        // TITLE
+        title.classList.remove(
+          "text-white"
+        );
+
+        title.classList.add(
+          "text-[#252525]"
+        );
+
+
+        // SEARCH BOX
+        searchBox.classList.remove(
+          "bg-[#252525]"
+        );
+
+        searchBox.classList.add(
+          "bg-white"
+        );
+
+
+        // SEARCH TEXT
+        searchInput.classList.remove(
+          "text-white"
+        );
+
+        searchInput.classList.add(
+          "text-[#252525]"
+        );
+
+
+        // SUN -> MOON
+        sunIcon.classList.add(
+          "hidden"
+        );
+
+        moonIcon.classList.remove(
+          "hidden"
+        );
+
+
+        // MODAL
+        modalBox.classList.remove(
+          "bg-[#333333]"
+        );
+
+        modalBox.classList.add(
+          "bg-white"
+        );
+
+
+        modalTitle.classList.remove(
+          "text-white"
+        );
+
+        modalTitle.classList.add(
+          "text-[#252525]"
+        );
+
+
+        taskInput.classList.remove(
+          "text-white"
+        );
+
+        taskInput.classList.add(
+          "text-[#252525]"
+        );
+
+      }
+
+
+      renderTasks();
+
+    });
+
+
+
+    // ==========================================
+    // FIRST RENDER
+    // ==========================================
+
+    renderTasks();
+
+  </script>
+
+</body>
+</html>
